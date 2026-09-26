@@ -1,7 +1,6 @@
 class KnightGraph{
     constructor(){
         this.vertex = [];
-        this.neighbors = [];
         this.adjacentList = {}; 
         this.loose = [];
     }
@@ -242,37 +241,6 @@ class KnightGraph{
         } 
     }
 
-    edgePairHlp(ver1, ver2){//creates array pairs from adjList
-        let hlpArr = [ver1];
-
-        hlpArr.push(ver2);
-        return hlpArr;
-
-    }
-
-    edgePairsArr(){ //creates array pairs form adjList
-     
-        const adj = this.adjacentList;
-        const vrt = this.vertex;
-        const v = Object.keys(adj).length
-        let adjEdge = [];
-        let index = 0
-
-        while(index < v){
-            let node = vrt[index];
-            let nextNode = adj[vrt[index]];
-            let tempArr = [];
-            tempArr.push(node);
-            nextNode.forEach((pair) => {
-                let nodePair = this.edgePairHlp(node, pair)
-                adjEdge.push(nodePair)
-            })
-            index++
-        }
-
-        this.neighbors = adjEdge;
-    }
-
     printGraph(){
         
         for(const vertex in this.adjacentList){
@@ -287,45 +255,51 @@ class KnightGraph{
         adjVerts.forEach((x) => {
             if(adjKey[x].length === 0 && x[0] !== dst[0] && x[1] !== dst[1]){
                 this.loose = (x);
+            } else {
+                this.loose = [];
             }
         })
     }
 
-    removeLoose(dst){
+    removeLoose(){
         const adjList = this.adjacentList;
         const adjVert = this.vertex
-
-        this.looseBranch(dst) //callback
-
         const lse = this.loose      
             function match(v1, v2){
                 return (v1[0] === v2[0] && v1[1] === v2[1]);
             }
         adjVert.forEach((k) => {
-
-            adjList[[k]].forEach((a) => {
-                
-                console.log(match(a, lse))
-
-              
+            adjList[[k]].forEach((a) => {               
+         
                 if(a[0] === lse[0] && a[1] === lse[1]){
     
                     let tempfil = adjList[[k]].filter((x) => !match(x, lse))
-                    console.log("temp", tempfil)
+
                     adjList[[k]] = [];
                     adjList[[k]] = tempfil;
                 }               
             })  
         })
         delete adjList[lse]
+        this.loose = [];
+    }
+
+    remove(dst){
+
+        this.looseBranch(dst);  
+        while(this.loose.length !== 0){
+            this.removeLoose()
+            this.looseBranch(dst);
+        }
+   
     }
 
     makeList(ogp, dst){
         this.addVertex(ogp, dst);
         this.makeEdge();
-        this.edgePairsArr();
-        this.removeLoose(dst);
-        this.printGraph();
+        // this.edgePairsArr();
+        this.remove(dst);
+        // this.printGraph();
     }
 
    
@@ -394,26 +368,18 @@ const knightMoves = function(source, destination){
     depthFirstPath(graphList, source, destination);
 
     const knight = dfsPrint(graphList, source, destination);
-
+        const rand = Math.floor(Math.random() * knight.length)
     console.log(` > KnightMoves([${source}], [${destination}]) `)
-    console.log(knight)
-    // knight.forEach((path) => {
-    //     // console.log(path)
-       
-    //     console.log(` =>You made it in ${path.length} moves! Here's your path:`)
-    //     for(const pair of path){
-    //         console.log(` [${pair}] \n` )
-    //     }
-    // })
-    
+    console.log(` =>You made it in ${knight[rand].length} moves! Here's your path:`)
+    knight[rand].forEach((path) => {
+            console.log(` [${path}] \n` )
+    })
 }
 
-// knightMoves([0,0], [3,3])
-
-
-// knightMoves([3,3], [0,0])
-
-
-// knightMoves([7,7], [0,0])
+knightMoves([0,0], [3,3])
+knightMoves([3,3], [0,0])
+knightMoves([3,4], [5,6])
 knightMoves([6,7], [0,1])
+knightMoves([7,7], [0,0])
+knightMoves([0,0], [7,7])
 //break
