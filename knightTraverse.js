@@ -297,7 +297,6 @@ class KnightGraph{
     makeList(ogp, dst){
         this.addVertex(ogp, dst);
         this.makeEdge();
-        // this.edgePairsArr();
         this.remove(dst);
         // this.printGraph();
     }
