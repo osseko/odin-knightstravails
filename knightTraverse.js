@@ -369,7 +369,7 @@ const knightMoves = function(source, destination){
     const knight = dfsPrint(graphList, source, destination);
         const rand = Math.floor(Math.random() * knight.length)
     console.log(` > KnightMoves([${source}], [${destination}]) `)
-    console.log(` =>You made it in ${knight[rand].length} moves! Here's your path:`)
+    console.log(` =>You made it in ${knight[rand].length-1} moves! Here's your path:`)
     knight[rand].forEach((path) => {
             console.log(` [${path}] \n` )
     })
@@ -378,6 +378,7 @@ const knightMoves = function(source, destination){
 knightMoves([0,0], [3,3])
 knightMoves([3,3], [0,0])
 knightMoves([3,4], [5,6])
+knightMoves([3,3], [4,3])
 knightMoves([6,7], [0,1])
 knightMoves([7,7], [0,0])
 knightMoves([0,0], [7,7])
